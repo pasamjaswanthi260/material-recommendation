@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Material Recommendation</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+
+<div class="container mt-4">
+
+    <h2 class="text-center">AI Material Recommendation</h2>
+
+    <div class="text-center">
+        <a href="/dashboard" class="btn btn-primary mb-3">View Dashboard</a>
+    </div>
+
+    <div class="card p-4">
+
+        <label>Number of Recommendations</label>
+        <input type="number" id="num" class="form-control" value="5">
+
+        <label class="mt-2">Sort By</label>
+        <select id="filter" class="form-control">
+            <option value="score">Sustainability Score</option>
+            <option value="cost">Low Cost</option>
+            <option value="co2">Low CO₂</option>
+        </select>
+
+        <!-- SIMPLE INPUTS -->
+        <label class="mt-2">Budget</label>
+        <select id="budget" class="form-control">
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
+        </select>
+
+        <label class="mt-2">Eco Preference</label>
+        <select id="eco" class="form-control">
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
+        </select>
+
+        <label class="mt-2">Durability</label>
+        <select id="durability" class="form-control">
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
+        </select>
+
+        <button class="btn btn-success mt-3" onclick="getRecommendations()">
+            Get Recommendations
+        </button>
+
+        <button class="btn btn-warning mt-2" onclick="downloadCSV()">
+            Download CSV
+        </button>
+
+        <button class="btn btn-danger mt-2" onclick="downloadPDF()">
+            Download PDF
+        </button>
+
+    </div>
+
+    <table class="table mt-4">
+        <thead>
+            <tr>
+                <th>Material</th>
+                <th>Score</th>
+                <th>Cost</th>
+                <th>Recyclability</th>
+                <th>CO₂</th>
+            </tr>
+        </thead>
+        <tbody id="resultsTable"></tbody>
+    </table>
+
+</div>
+
+<script>
+function getRecommendations() {
+
+    fetch('/recommend', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            recommendations: document.getElementById("num").value,
+            filter: document.getElementById("filter").value,
+            budget: document.getElementById("budget").value,
+            eco: document.getElementById("eco").value,
+            durability: document.getElementById("durability").value
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+
+        const table = document.getElementById("resultsTable");
+        table.innerHTML = "";
+
+        data.recommendations.forEach(item => {
+            table.innerHTML += `
+            <tr>
+                <td>${item.material_name}</td>
+                <td>${item.Material_Suitability_Score}</td>
+                <td>${item.cost}</td>
+                <td>${item.recyclability}</td>
+                <td>${item.co2_emission_score}</td>
+            </tr>`;
+        });
+    });
+}
+
+function downloadCSV() {
+    window.location.href = "/download";
+}
+
+function downloadPDF() {
+    window.location.href = "/download_pdf";
+}
+</script>
+
+</body>
+</html>
