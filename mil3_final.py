@@ -38,7 +38,6 @@ def dashboard():
     df = pd.read_sql('SELECT * FROM material', conn)
     conn.close()
 
-    # Detect material name
     def get_material(row):
         for col in df.columns:
             if col.startswith("material_type_") and row[col] == True:
@@ -49,7 +48,6 @@ def dashboard():
 
     import plotly.express as px
 
-    # Metrics
     df["co2_reduction"] = 100 - df["co2_emission_score"]
     df["cost_savings"] = 100 - df["cost"]
 
@@ -68,7 +66,7 @@ def dashboard():
                            graph3=graph3)
 
 # -----------------------------
-# RECOMMENDATION API (FINAL)
+# RECOMMENDATION API
 # -----------------------------
 @app.route('/recommend', methods=['POST'])
 def recommend():
@@ -79,39 +77,18 @@ def recommend():
     num = int(data.get("recommendations", 5))
     filter_type = data.get("filter", "score")
 
-    # -----------------------------
-    # SIMPLE INPUT CONVERSION
-    # -----------------------------
-    budget_map = {
-        "low": 50,
-        "medium": 100,
-        "high": 9999
-    }
-
-    eco_map = {
-        "low": 100,
-        "medium": 70,
-        "high": 40
-    }
-
-    durability_map = {
-        "low": 0,
-        "medium": 50,
-        "high": 70
-    }
+    budget_map = {"low": 50, "medium": 100, "high": 9999}
+    eco_map = {"low": 100, "medium": 70, "high": 40}
+    durability_map = {"low": 0, "medium": 50, "high": 70}
 
     budget = budget_map.get(data.get("budget"), 100)
     eco = eco_map.get(data.get("eco"), 100)
     durability = durability_map.get(data.get("durability"), 0)
 
-    # -----------------------------
-    # FETCH DATA
-    # -----------------------------
     conn = get_connection()
     df = pd.read_sql('SELECT * FROM material', conn)
     conn.close()
 
-    # Detect material name
     def get_material(row):
         for col in df.columns:
             if col.startswith("material_type_") and row[col] == True:
@@ -120,40 +97,33 @@ def recommend():
 
     df["material_name"] = df.apply(get_material, axis=1)
 
-    # -----------------------------
-    # APPLY FILTERS
-    # -----------------------------
     df = df[
         (df["cost"] <= budget) &
         (df["co2_emission_score"] <= eco) &
         (df["recyclability"] >= durability)
     ]
 
-    # -----------------------------
-    # SORTING
-    # -----------------------------
     if filter_type == "cost":
-        df = df.sort_values(by="cost", ascending=True)
+        df = df.sort_values(by="cost")
     elif filter_type == "co2":
-        df = df.sort_values(by="co2_emission_score", ascending=True)
+        df = df.sort_values(by="co2_emission_score")
     else:
         df = df.sort_values(by="Material_Suitability_Score", ascending=False)
 
     df = df.head(num)
 
-    # STORE RESULTS
     last_results = df
 
     return jsonify({"recommendations": df.to_dict(orient="records")})
 
 # -----------------------------
-# DOWNLOAD CSV (RECOMMENDED ONLY)
+# DOWNLOAD CSV
 # -----------------------------
 @app.route('/download')
 def download():
     global last_results
 
-    if last_results is None or last_results.empty:
+    if last_results.empty:
         return "No recommendations yet!"
 
     file_path = "recommended_materials.csv"
@@ -162,13 +132,13 @@ def download():
     return send_file(file_path, as_attachment=True)
 
 # -----------------------------
-# DOWNLOAD PDF (RECOMMENDED ONLY)
+# DOWNLOAD PDF
 # -----------------------------
 @app.route('/download_pdf')
 def download_pdf():
     global last_results
 
-    if last_results is None or last_results.empty:
+    if last_results.empty:
         return "No recommendations yet!"
 
     file_path = "recommended_materials.pdf"
@@ -184,7 +154,8 @@ def download_pdf():
     return send_file(file_path, as_attachment=True)
 
 # -----------------------------
-# RUN SERVER
+# RUN SERVER (IMPORTANT FIX)
 # -----------------------------
 if __name__ == "__main__":
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
