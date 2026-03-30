@@ -1,117 +1,49 @@
-🌱 Material Recommendation System
+# 🌱 AI-Based Sustainable Material Recommendation System
 
- Project Description
+## 📌 Project Overview
+This project is a web-based application that helps users select eco-friendly materials based on sustainability factors such as cost, CO₂ emission, and recyclability.
 
-This project is a web application that helps users choose the best material based on:
-
-- Budget 
-- Eco-friendliness 
-- Durability 
-
-It also shows a dashboard with analytics like CO₂ reduction, cost savings, and material trends.
+It provides intelligent material recommendations along with a dashboard for visualization and analysis.
 
 ---
 
- Features
-
--  Recommend best materials based on user input
--  Dashboard with graphs
--  CO₂ Reduction analysis
--  Cost Savings analysis
--  Material Usage Trends
--  Download results as CSV
--  Download results as PDF
--  Deployed online using Render
-
----
-
-Technologies Used
-
-- Python (Flask)
-- HTML, CSS, Bootstrap
-- PostgreSQL Database
-- Plotly (for graphs)
-- Pandas (data handling)
-- ReportLab (PDF generation)
+## 🚀 Features
+- 🔍 Material Recommendation based on user input  
+- 📊 Interactive Dashboard using Plotly  
+- 💰 Cost Savings Analysis  
+- 🌍 CO₂ Reduction Visualization  
+- 📈 Material Usage Trends  
+- 📥 Download Results as CSV  
+- 📄 Generate PDF Reports  
+- ☁️ Deployed on Render  
 
 ---
 
-Project Files
-
-- "mil3_final.py" → Main backend code
-- "templates/index.html" → Home page
-- "templates/dashboard.html" → Dashboard page
-- "static/style.css" → Styling
-- "requirements.txt" → Dependencies
-
----
-
-🗄 Database
-
-- Database: PostgreSQL
-- Table name: "material"
-- Data imported from CSV file
+## 🛠️ Technologies Used
+- **Frontend:** HTML, CSS, Bootstrap  
+- **Backend:** Python (Flask)  
+- **Database:** PostgreSQL  
+- **Libraries:** Pandas, Plotly, ReportLab, psycopg2  
+- **Deployment:** Render  
 
 ---
 
-⚙️ Environment Variables
-
-Add these in Render:
-
-DB_HOST=your_host
-DB_NAME=your_database
-DB_USER=your_username
-DB_PASSWORD=your_password
-
----
-
- ▶️ How to Run (Optional)
-
-You can run this project locally if needed:
-
-1. Install requirements:
-   pip install -r requirements.txt  
-
-2. Run the project:
-   python mil3_final.py  
-
-3. Open:
-   http://127.0.0.1:5000/
-
- OR use the deployed version on Render.
+## ⚙️ How It Works
+1. User enters requirements (budget, eco level, durability)  
+2. Data is sent to Flask backend  
+3. Backend filters materials from PostgreSQL database  
+4. Results are sorted based on sustainability score  
+5. Recommended materials are displayed to the user  
+6. Dashboard visualizes insights using graphs  
 
 ---
 
-📊 Dashboard
-
-The dashboard shows:
-
-- CO₂ Reduction %
-- Cost Savings
-- Material Usage Trends
+## 📊 Dashboard Features
+- CO₂ Reduction Graph  
+- Cost Savings Graph  
+- Material Usage Trends  
 
 ---
 
-📥 Download Options
-
-- CSV file download
-- PDF report download
-
----
-
-🌐 Deployment
-
-- Deployed using Render
-- Connected with PostgreSQL cloud database
-
-
-
-
-
-
-
-
-
-✅ Add diagrams for presentation
-
-Just tell 👍
+## Live Demo
+https://material-recommendation.onrender.com/
